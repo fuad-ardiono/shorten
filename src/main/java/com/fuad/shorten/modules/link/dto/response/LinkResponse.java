@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class LinkResponse {
+    @JsonProperty("shortCode")
+    String shortCode;
+
     @JsonProperty("shortenLink")
     String shortenLink;
 
