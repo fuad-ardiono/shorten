@@ -129,10 +129,3 @@ CREATE DATABASE shorten_new;
 CREATE USER fuad WITH PASSWORD 'ardiono';
 GRANT ALL PRIVILEGES ON DATABASE shorten_new TO fuad;
 ```
-
-## Performa dan Skalabilitas
-
-### Metrik Performa
-- **Throughput**: 10,000+ requests per second (dengan caching)
-- **Latency**: <50ms untuk redirect
-- **Storage**: Mendukung hingga 62^8 ≈ 218 triliun URL pendek unik
