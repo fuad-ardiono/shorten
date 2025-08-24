@@ -4,7 +4,7 @@ import com.fuad.shorten.db.entity.LinkEntity;
 import com.fuad.shorten.db.repository.LinkRepository;
 import com.fuad.shorten.modules.link.dto.request.LinkRequest;
 import com.fuad.shorten.modules.link.dto.response.LinkResponse;
-import com.fuad.shorten.shared.exception.NotFoundException;
+import com.fuad.shorten.shared.exception.http.NotFoundException;
 import com.fuad.shorten.shared.utils.ShortCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
