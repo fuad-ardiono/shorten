@@ -2,6 +2,7 @@ package com.fuad.shorten.shared.advice;
 
 import com.fuad.shorten.shared.dto.GenericResponse;
 import com.fuad.shorten.shared.dto.PopulatedError;
+import com.fuad.shorten.shared.exception.http.BadRequestException;
 import com.fuad.shorten.shared.exception.http.NotFoundException;
 import com.fuad.shorten.shared.exception.http.UnprocessableContentException;
 import com.fuad.shorten.shared.utils.ResponseUtil;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
@@ -23,7 +23,13 @@ public class HttpStatusCodeAdvice {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<GenericResponse<String>> handleNotFound(NotFoundException ex) {
-        return responseUtil.response(null, ex, HttpStatus.NOT_FOUND);
+        return handleGenericError(ex, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<GenericResponse<String>> handleBadRequest(BadRequestException ex) {
+        return handleGenericError(ex, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnprocessableContentException.class)
@@ -44,5 +50,9 @@ public class HttpStatusCodeAdvice {
                 .toList();
 
         return responseUtil.response(populatedErrorList, ex, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    private ResponseEntity<GenericResponse<String>> handleGenericError(Exception ex, HttpStatus status) {
+        return responseUtil.response(null, ex, status);
     }
 }

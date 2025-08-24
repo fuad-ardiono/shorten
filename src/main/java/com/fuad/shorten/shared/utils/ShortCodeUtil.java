@@ -1,6 +1,7 @@
 package com.fuad.shorten.shared.utils;
 
 import com.fuad.shorten.db.repository.LinkRepository;
+import com.fuad.shorten.shared.exception.http.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class ShortCodeUtil {
         } while (!isUnique && attempt < 10);
 
         if (!isUnique) {
-            throw new RuntimeException("Failed to generate unique short_code after " + attempt + " attempts");
+            throw new BadRequestException("Failed to generate unique short_code after " + attempt + " attempts");
         }
 
         return shortCode;
@@ -55,7 +56,7 @@ public class ShortCodeUtil {
             long value = Math.abs(new BigInteger(hash).longValue() % (long) Math.pow(BASE62_CHARS.length(), SHORT_CODE_LENGTH));
             return toBase62(value);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 not available", e);
+            throw new BadRequestException("SHA-256 not available");
         }
     }
 }
