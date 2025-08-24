@@ -45,17 +45,3 @@ BEGIN
         ', c, c);
     END LOOP;
 END $$;
-
--- Trigger to set short_code_first before insert
-CREATE OR REPLACE FUNCTION set_short_code_first()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.short_code_first = SUBSTRING(NEW.short_code FROM 1 FOR 1);
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_set_short_code_first
-BEFORE INSERT ON link
-FOR EACH ROW
-EXECUTE FUNCTION set_short_code_first();

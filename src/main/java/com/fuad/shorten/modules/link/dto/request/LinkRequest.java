@@ -13,7 +13,4 @@ import lombok.NoArgsConstructor;
 public class LinkRequest {
     @JsonProperty("url")
     public String url;
-
-    @JsonProperty("customShortenLink")
-    public String customShortenLink;
 }
