@@ -21,5 +21,8 @@ public class GenericResponseMeta {
 
     @JsonProperty("pagination")
     ResponseMetaPagination pagination;
+
+    @JsonProperty("error")
+    ResponseMetaError error;
 }
 

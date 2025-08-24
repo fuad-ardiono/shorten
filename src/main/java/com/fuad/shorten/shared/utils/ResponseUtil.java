@@ -48,4 +48,28 @@ public class ResponseUtil {
 
         return new ResponseEntity<>(genericResponse, status);
     }
+
+    public <T> ResponseEntity<GenericResponse<T>> response(
+            T data,
+            Exception exception,
+            HttpStatus status
+    ) {
+        ResponseMetaHttp.ResponseMetaHttpBuilder responseMetaHttp = ResponseMetaHttp.builder()
+                .statusCode(status.value())
+                .statusText(status.getReasonPhrase());
+
+        ResponseMetaError.ResponseMetaErrorBuilder responseMetaError = ResponseMetaError.builder()
+                .message(exception.getMessage());
+
+        GenericResponseMeta.GenericResponseMetaBuilder responseMeta = GenericResponseMeta.builder()
+                .success(false)
+                .http(responseMetaHttp.build())
+                .error(responseMetaError.build());
+
+        GenericResponse<T> genericResponse = new GenericResponse<>();
+        genericResponse.setData(data);
+        genericResponse.setMeta(responseMeta.build());
+
+        return new ResponseEntity<>(genericResponse, status);
+    }
 }
