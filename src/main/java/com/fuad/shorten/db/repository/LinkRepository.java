@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LinkRepository extends JpaRepository<LinkEntity, UUID> {
-    Boolean existsByShortCode(String shortCode);
+    Boolean existsByShortCodeFirstAndShortCode(char shortCodeFirst, String shortCode);
 
-    Optional<LinkEntity> findFirstByShortCode(String shortCode);
+    Optional<LinkEntity> findFirstByShortCodeFirstAndShortCode(char shortCodeFirst, String shortCode);
 }

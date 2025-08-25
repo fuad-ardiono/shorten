@@ -24,7 +24,8 @@ public class ShortCodeUtil {
         int attempt = 0;
         do {
             shortCode = generateShortCode(originalUrl, timestamp, attempt);
-            isUnique = !linkRepository.existsByShortCode(shortCode);
+            char firstCharShortCode = shortCode.charAt(0);
+            isUnique = !linkRepository.existsByShortCodeFirstAndShortCode(firstCharShortCode, shortCode);
             attempt++;
         } while (!isUnique && attempt < 10);
 

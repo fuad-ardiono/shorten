@@ -39,16 +39,18 @@ public class LinkServiceImpl implements LinkService {
         String shortenLink = String.format("%s/%s", environment.getProperty("config.base-url"), shortenCode);
 
         return LinkResponse.builder()
+                .shortCode(shortenCode)
                 .originalLink(dto.url)
                 .shortenLink(shortenLink)
                 .build();
     }
 
     public String getLink(String shortCode) {
-        Boolean isExist = linkRepository.existsByShortCode(shortCode);
+        char firstCharShortCode = shortCode.charAt(0);
+        Boolean isExist = linkRepository.existsByShortCodeFirstAndShortCode(firstCharShortCode, shortCode);
 
         if (isExist) {
-            return linkRepository.findFirstByShortCode(shortCode)
+            return linkRepository.findFirstByShortCodeFirstAndShortCode(firstCharShortCode, shortCode)
                     .map(LinkEntity::getOriginalUrl)
                     .orElseThrow(() -> new NotFoundException("Link not found"));
         }
