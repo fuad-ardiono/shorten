@@ -8,26 +8,60 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 @Component
 public class ShortCodeUtil {
     private final String BASE62_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private final int SHORT_CODE_LENGTH = 8;
+    public final String RESERVED_SHORT_CODE_KEY = "reserved_short_code";
 
     @Autowired
     LinkRepository linkRepository;
 
+    @Autowired
+    RedisSetUtil redisSetUtil;
+
+    public void reserveSortCode() {
+        Long totalReserved = redisSetUtil.getSetSize(RESERVED_SHORT_CODE_KEY).orElse(0L);
+
+        if (totalReserved <= 0) {
+            long reservedShortCodeCount = 1000L;
+            long counter = 0L;
+
+            while (counter < reservedShortCodeCount) {
+                String shortCode = getShortCode(UUID.randomUUID().toString());
+                redisSetUtil.addToSet(RESERVED_SHORT_CODE_KEY, shortCode);
+
+                counter++;
+            }
+        }
+    }
+
+    public String popShortCode(String originalUrl) {
+        Long totalReserved = redisSetUtil.getSetSize(RESERVED_SHORT_CODE_KEY).orElse(0L);
+
+        if (totalReserved > 0) {
+            return (String) redisSetUtil.popFromSet(RESERVED_SHORT_CODE_KEY);
+        } else {
+            reserveSortCode();
+            return getShortCode(originalUrl);
+        }
+    }
+
     public String getShortCode(String originalUrl) {
         String shortCode;
         boolean isUnique;
+        boolean isReserved;
         long timestamp = System.currentTimeMillis();
         int attempt = 0;
         do {
             shortCode = generateShortCode(originalUrl, timestamp, attempt);
             char firstCharShortCode = shortCode.charAt(0);
             isUnique = !linkRepository.existsByShortCodeFirstAndShortCode(firstCharShortCode, shortCode);
+            isReserved = redisSetUtil.isMember(RESERVED_SHORT_CODE_KEY, shortCode).orElse(false);
             attempt++;
-        } while (!isUnique && attempt < 10);
+        } while (!isUnique && !isReserved && attempt < 10);
 
         if (!isUnique) {
             throw new BadRequestException("Failed to generate unique short_code after " + attempt + " attempts");

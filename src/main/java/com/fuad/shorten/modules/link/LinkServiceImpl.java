@@ -24,7 +24,7 @@ public class LinkServiceImpl implements LinkService {
     Environment environment;
 
     public LinkResponse createLink(LinkRequest dto) {
-        String shortenCode = shortCodeUtil.getShortCode(dto.url);
+        String shortenCode = shortCodeUtil.popShortCode(dto.url);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireAt = now.plusDays(3);
 

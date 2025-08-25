@@ -58,8 +58,9 @@ public class ResponseUtil {
                 .statusCode(status.value())
                 .statusText(status.getReasonPhrase());
 
-        ResponseMetaError.ResponseMetaErrorBuilder responseMetaError = ResponseMetaError.builder()
-                .message(exception.getMessage());
+        ResponseMetaError.ResponseMetaErrorBuilder<Object> responseMetaError = ResponseMetaError.builder()
+                .message(exception.getMessage())
+                .errorBag(data);
 
         GenericResponseMeta.GenericResponseMetaBuilder responseMeta = GenericResponseMeta.builder()
                 .success(false)
@@ -67,7 +68,7 @@ public class ResponseUtil {
                 .error(responseMetaError.build());
 
         GenericResponse<T> genericResponse = new GenericResponse<>();
-        genericResponse.setData(data);
+        genericResponse.setData(null);
         genericResponse.setMeta(responseMeta.build());
 
         return new ResponseEntity<>(genericResponse, status);

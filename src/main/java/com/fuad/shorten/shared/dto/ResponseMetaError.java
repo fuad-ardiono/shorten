@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ResponseMetaError {
+public class ResponseMetaError<T> {
     @JsonProperty("message")
     String message;
+
+    @JsonProperty("errorBag")
+    T errorBag;
 }
