@@ -116,7 +116,7 @@ curl -L http://localhost:8080/uWbjPKxr
 ```
 
 ### 4. Dokumentasi API
-Akses dokumentasi lengkap di: `http://localhost:8080/api/index.html`
+Akses dokumentasi lengkap di: `http://localhost:8080/api/api-docs/index.html`
 
 ## Konfigurasi Database
 
@@ -129,3 +129,6 @@ CREATE DATABASE shorten_new;
 CREATE USER fuad WITH PASSWORD 'ardiono';
 GRANT ALL PRIVILEGES ON DATABASE shorten_new TO fuad;
 ```
+
+## Notes
+- Ketika menggunakan partisi pastikan query condition nya mencakup kolom partisinya.
